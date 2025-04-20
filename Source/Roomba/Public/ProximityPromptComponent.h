@@ -1,0 +1,85 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/SceneComponent.h"
+#include "InputActionValue.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "RoombaMovement.h"
+#include "Components/BoxComponent.h"
+#include "ProximityPromptComponent.generated.h"
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTriggered);
+
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisibilityChanged, bool, NewVisible);
+
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+class ROOMBA_API UProximityPromptComponent : public USceneComponent
+{
+	GENERATED_BODY()
+
+public:	
+	// Sets default values for this component's properties
+	UProximityPromptComponent();
+
+	// Broadcast when the proximity prompt is triggered
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnTriggered OnTriggered;
+
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnVisibilityChanged OnVisibilityChanged;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	float MaxActivationDistance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Info")
+	bool Visible;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Info")
+	bool Enabled;
+	
+	UFUNCTION(BlueprintCallable, Category="Config")
+	void SetEnabled(bool bEnabled);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	UTexture2D* Image;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	float StaminaRequired;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+	void SetVisibility(bool NewVisible);
+
+	UFUNCTION()
+	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex);
+
+public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void Trigger();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	UBoxComponent* BoxComponent;
+
+
+private:
+
+	ARoombaMovement* RoombaMovement;
+
+	bool bIsCollidingWithBoxComponent;
+
+	float GetDistanceToPlayer();
+};

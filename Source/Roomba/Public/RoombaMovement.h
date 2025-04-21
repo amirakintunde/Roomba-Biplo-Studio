@@ -24,8 +24,8 @@ UENUM(BlueprintType)
 enum class  PlayerCameraState : uint8
 {
 	AtSpecifiedPosition UMETA(DisplayName = "AtSpecifiedPosition"),
-	AttachedToPlayer UMETA(DisplayName = "AttachedToPlayer"),
-	AttachedToSpline UMETA(DisplayName = "AttachedToSpline"),
+	AttachedToPlayer    UMETA(DisplayName = "AttachedToPlayer"),
+	AttachedToSpline    UMETA(DisplayName = "AttachedToSpline"),
 
 };
 

@@ -243,7 +243,11 @@ void ARoombaMovement::OnInteract(const FInputActionValue& InputActionValue)
 		UProximityPromptComponent* Comp = Cast<UProximityPromptComponent>(FoundActor->GetComponentByClass(UProximityPromptComponent::StaticClass()));
 		if (Comp)
 		{
-			Comp->Trigger();
+			const bool Success = Comp->Trigger();
+			if (Success)
+			{
+				OnPromptTriggered.Broadcast(FoundActor);
+			}
 		}
 	}
 }

@@ -20,6 +20,9 @@ class USkeletalMeshComponent;
 class USceneComponent;
 class UWidgetComponent;
 
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPromptTriggered, AActor*, Actor);
+
 UENUM(BlueprintType)
 enum class  PlayerCameraState : uint8
 {
@@ -80,6 +83,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UFloatingPawnMovement* FloatingPawnMovement;
+
+	// Broadcast when the proximity prompt is triggered
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnPromptTriggered OnPromptTriggered;
 	
 protected:
 	// Called when the game starts or when spawned

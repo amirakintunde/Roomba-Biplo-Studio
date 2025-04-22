@@ -124,11 +124,13 @@ public:
 	void EndDash();
 
 	// Call this when you update the simple inventory
+	UFUNCTION(BlueprintCallable)
 	void UpdateCarryingObject(UMaterialInterface* CarryingMaterial);
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CarryingCableCount = 0;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float  HoverHeight = 100;
 	
 	UPROPERTY(EditAnywhere)

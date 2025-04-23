@@ -111,10 +111,11 @@ void UBatteryMeterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 			if (IsInShadow && FMath::IsNearlyEqual(VelocityLength, 0.0f, 0.01f))
 			{
-				APlayerCameraManager * cameramanager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-				cameramanager->StartCameraFade(0, 1, 1.5, FLinearColor::Black, true, true);
+				APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+				CameraManager->StartCameraFade(0, 1, 1.5, FLinearColor::Black, true, true);
 				PlayerRef->CanPlayerLook = false;
 				PlayerRef->CanPlayerMove = false;
+				OnDeath.Broadcast();
 
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBatteryMeterComponent::RespawnPlayer, 1.5f, false);
 			}
@@ -134,8 +135,8 @@ void UBatteryMeterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UBatteryMeterComponent::IncreaseStamina2() 
 {
-	FString BatteryincrEQFRWReasestring = FString::Printf(TEXT("INCREASE STAMINA CALLED "));
-	GEngine->AddOnScreenDebugMessage(23,1,FColor::Green,BatteryincrEQFRWReasestring);
+	FString BatteryIncreaseString = FString::Printf(TEXT("INCREASE STAMINA CALLED "));
+	GEngine->AddOnScreenDebugMessage(23,1,FColor::Green,BatteryIncreaseString);
 	
 	BatteryLevel++;
 	
@@ -160,7 +161,7 @@ void UBatteryMeterComponent::NegateStamina( float Amount)
 
 void UBatteryMeterComponent::RespawnPlayer() 
 {
-	APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 
 	if (PlayerRef && CameraManager )
 	{
@@ -169,7 +170,7 @@ void UBatteryMeterComponent::RespawnPlayer()
 		CameraManager->StartCameraFade(1, 0, 1.5, FLinearColor::Black, true, true);
 		PlayerRef->CanPlayerMove = true;
 		PlayerRef->FloatingPawnMovement->MaxSpeed = PlayerRef->StoreMaxSpeed;
-		OnDeath.Broadcast();
+		OnRespawn.Broadcast();
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	}
 }

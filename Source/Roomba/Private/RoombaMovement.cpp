@@ -305,9 +305,8 @@ void ARoombaMovement::Tick(float DeltaTime)
 
 	ChangePlayerCamera();
 	
-	
-    	const float FOVInterpSpeed = 0.9; 
-    	const float FOVTolerance = 0.1f;
+    const float FOVInterpSpeed = 0.9; 
+    const float FOVTolerance = 0.1f;
 
 	if (CameraState == PlayerCameraState::AttachedToPlayer)
 	{
@@ -331,8 +330,6 @@ void ARoombaMovement::Tick(float DeltaTime)
 		}
 	}
 }
-
-
 
 void ARoombaMovement::HoverPlayer(float DeltaTime)
 {

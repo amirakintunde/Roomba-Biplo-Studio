@@ -14,6 +14,9 @@ class ARoombaMovement;
 UDELEGATE(BlueprintAuthorityOnly)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInShadowChanged, bool, NewInShadow);
 
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UBatteryMeterComponent : public UActorComponent
 {
@@ -102,4 +105,8 @@ public:
 	void SetInActivationCamera(bool bValue);
 
 	FVector SpawnPosition;
+
+	// Broadcast when the roomba dies
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnDeath OnDeath;
 };

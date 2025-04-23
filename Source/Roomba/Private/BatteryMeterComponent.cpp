@@ -160,15 +160,16 @@ void UBatteryMeterComponent::NegateStamina( float Amount)
 
 void UBatteryMeterComponent::RespawnPlayer() 
 {
-	APlayerCameraManager * cameramanager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 
-	if (PlayerRef && cameramanager )
+	if (PlayerRef && CameraManager )
 	{
 		PlayerRef->SetActorLocation(SpawnPosition);
 		BatteryLevel = 100;
-		cameramanager->StartCameraFade(1, 0, 1.5, FLinearColor::Black, true, true);
+		CameraManager->StartCameraFade(1, 0, 1.5, FLinearColor::Black, true, true);
 		PlayerRef->CanPlayerMove = true;
 		PlayerRef->FloatingPawnMovement->MaxSpeed = PlayerRef->StoreMaxSpeed;
+		OnDeath.Broadcast();
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	}
 }

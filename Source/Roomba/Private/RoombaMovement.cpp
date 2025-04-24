@@ -120,9 +120,15 @@ void ARoombaMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ARoombaMovement::OnDashInputChanged(const FInputActionValue& InputActionValue)
 {
-	bool bIsDashing  = InputActionValue.Get<bool>();
+	const bool bIsDashing  = InputActionValue.Get<bool>();
+
+	// need to make it a positive
+	const float DrainAmount = FMath::Abs(BatteryMeterComponent->SpeedBoostMovementNegationAmount);
+	const bool EnoughBattery = BatteryMeterComponent->GetBattery() > DrainAmount;
+
+	//UE_LOG(LogTemp, Warning, TEXT("Battery: %f %f"), BatteryMeterComponent->GetBattery(), -BatteryMeterComponent->SpeedBoostMovementNegationAmount);
 	
-	if (bIsDashing && !bIsCurrentlyDashing && CanPlayerMove && BatteryMeterComponent->GetBattery() >=4)
+	if (bIsDashing && !bIsCurrentlyDashing && CanPlayerMove && EnoughBattery)
 	{
 		bIsCurrentlyDashing = true;
 		

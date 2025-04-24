@@ -47,8 +47,8 @@ void ACraneController::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		
 		EnhancedInputComponent->BindAction(MoveCraneUp       , ETriggerEvent::Triggered, this, &ACraneController::MoveUp);
 		EnhancedInputComponent->BindAction(MoveCraneDown     , ETriggerEvent::Triggered, this, &ACraneController::MoveDown);
-		EnhancedInputComponent->BindAction(MoveCraneLeft     , ETriggerEvent::Triggered, this, &ACraneController::RotateLeft);
-		EnhancedInputComponent->BindAction(MoveCraneRight    , ETriggerEvent::Triggered, this, &ACraneController::RotateRight);
+		//EnhancedInputComponent->BindAction(MoveCraneLeft     , ETriggerEvent::Triggered, this, &ACraneController::RotateLeft);
+		//EnhancedInputComponent->BindAction(MoveCraneRight    , ETriggerEvent::Triggered, this, &ACraneController::RotateRight);
 	//	EnhancedInputComponent->BindAction(SwitchBackToPlayer, ETriggerEvent::Completed, this, &ACraneController::SwitchToPlayer);
 
 	}

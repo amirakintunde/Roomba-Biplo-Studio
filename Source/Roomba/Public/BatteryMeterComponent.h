@@ -83,7 +83,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MovementNegationAmount = -3.0f;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float SpeedBoostMovementNegationAmount = -35.0f;
 	
 	UPROPERTY(EditAnywhere)
@@ -100,12 +100,14 @@ public:
 
 	FTimerHandle TimerHandle;
 
+	void SetInActivationCamera(bool bValue);
+	
+	UFUNCTION(BlueprintCallable)
 	float GetBattery() { return BatteryLevel; }
 	
 	UFUNCTION(BlueprintCallable)
 	float GetBatteryLevel() {return BatteryLevel  / MaxBatteryLevel;}
 
-	void SetInActivationCamera(bool bValue);
 
 	FVector SpawnPosition;
 

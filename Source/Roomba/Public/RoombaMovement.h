@@ -143,7 +143,9 @@ public:
 	float DashMaxFOV = 120;
 	float DefaultFOV;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsCurrentlyDashing = false;
+	
 	UPROPERTY(EditAnywhere)
 	float DashDuration = 0.6;
 

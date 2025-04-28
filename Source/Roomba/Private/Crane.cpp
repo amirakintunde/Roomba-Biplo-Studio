@@ -31,6 +31,7 @@ void ACrane::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+// move the cranes rotation  and height ////////////////////////////////////////////////
 void ACrane::RotateCraneLeft(float RotationAmount)
 {
 	FRotator NewRotation = CraneRotator->GetRelativeRotation();
@@ -64,3 +65,4 @@ void ACrane::MoveCraneDown(float MoveAmount)
 	
 	CraneGrabber->SetRelativeLocation(NewLocation);
 }
+////////////////////////////////////////////////////////////////////////////////////////

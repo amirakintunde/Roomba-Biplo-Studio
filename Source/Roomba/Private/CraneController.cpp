@@ -83,6 +83,7 @@ void ACraneController::RotateRight()
 	CraneRef->RotateCraneRight(1.0f);
 }
 
+
 void ACraneController::ClearInput()
 {
 	TSubclassOf<ARoombaMovement> PlayerClass = ARoombaMovement::StaticClass();

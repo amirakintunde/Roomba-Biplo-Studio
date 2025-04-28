@@ -36,7 +36,7 @@ void ACheckPoint::Tick(float DeltaTime)
 
 void ACheckPoint::OverlapBegins(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 								   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
+{// on begin over lap store the check points location and parse it to the save sytem to spawn player at that point
 	FVector ActorLocation = GetActorLocation();
 	FString SaveLocationText = FString::Printf(TEXT("new Checkpoint location = X: %f, Y: %f, Z: %f"), ActorLocation.X, ActorLocation.Y, ActorLocation.Z);
 

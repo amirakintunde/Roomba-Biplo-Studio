@@ -51,4 +51,5 @@ public:
 	void OnFadeComplete();
 	int CountOfConnectedSwitches = 0;
 
+	bool isfading = false;
 };

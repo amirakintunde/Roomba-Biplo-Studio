@@ -63,9 +63,13 @@ void ARoombaMovement::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Store default Values
 	StoreMaxSpeed = FloatingPawnMovement->MaxSpeed;
 	StoreDeceleration = FloatingPawnMovement->Deceleration;
+	DefaultFOV = FollowCamera->FieldOfView;
+	NewFOV = DefaultFOV;
 
+	// Check if the current level is using a spline if so attach the camera to the spline
 	for (int i = 0; i < LevelsThatUseSpline.Num(); i++)
 	{
 		if (LevelsThatUseSpline[i] == UGameplayStatics::GetCurrentLevelName(GetWorld()))
@@ -79,8 +83,7 @@ void ARoombaMovement::BeginPlay()
 	}
 
 	
-	DefaultFOV = FollowCamera->FieldOfView;
-	NewFOV = DefaultFOV;
+
 }
 
 
@@ -100,7 +103,7 @@ void ARoombaMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+		//Dashing
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &ARoombaMovement::OnDashInputChanged);
 		
 		// Moving
@@ -108,7 +111,7 @@ void ARoombaMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARoombaMovement::Look);
-
+		// Interaction
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ARoombaMovement::OnInteract);
 
 	}
@@ -122,12 +125,12 @@ void ARoombaMovement::OnDashInputChanged(const FInputActionValue& InputActionVal
 {
 	const bool bIsDashing  = InputActionValue.Get<bool>();
 
-	// need to make it a positive
+	//Get the needed data 
 	const float DrainAmount = FMath::Abs(BatteryMeterComponent->SpeedBoostMovementNegationAmount);
 	const bool EnoughBattery = BatteryMeterComponent->GetBattery() > DrainAmount;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Battery: %f %f"), BatteryMeterComponent->GetBattery(), -BatteryMeterComponent->SpeedBoostMovementNegationAmount);
-	
+
+    // if player not currently dashing boost the player forward for a set amount of time 	
 	if (bIsDashing && !bIsCurrentlyDashing && CanPlayerMove && EnoughBattery)
 	{
 		bIsCurrentlyDashing = true;
@@ -135,13 +138,15 @@ void ARoombaMovement::OnDashInputChanged(const FInputActionValue& InputActionVal
 		FloatingPawnMovement->MaxSpeed = DashMaxSpeed;
 		FloatingPawnMovement->Deceleration = 0.0f; 
 		
-		FloatingPawnMovement->Velocity += GetActorForwardVector() * DashMaxSpeed;
+		FloatingPawnMovement->Velocity += GetActorForwardVector() * DashMaxSpeed; // dash forward with a certain amount of speed
 
 		BatteryMeterComponent->NegateStamina(BatteryMeterComponent->SpeedBoostMovementNegationAmount);
+
 		
 		FTimerHandle DashTimerHandle;
-		GetWorldTimerManager().SetTimer(DashTimerHandle, this, &ARoombaMovement::EndDash, DashDuration, false);
+		GetWorldTimerManager().SetTimer(DashTimerHandle, this, &ARoombaMovement::EndDash, DashDuration, false);// timer
 	}
+	
 }
 
 void ARoombaMovement::EndDash()
@@ -266,13 +271,16 @@ void ARoombaMovement::Tick(float DeltaTime)
 	HoverPlayer(DeltaTime);
 	ChangePlayerCamera();
 
+	//update the scene component to the players locaiton
 	SceneComponent->SetWorldLocation(GetActorLocation());
 
+	//Spline specific implementation
 	if (DoesLevelUseSpline)
 	{
 		if (PlayerSplineRef && CameraState == PlayerCameraState::AttachedToSpline)
 		{
 
+			//set camera boom arm testing to all false
 			CameraBoom->bInheritYaw = false;
 			CameraBoom->bInheritPitch = false;
 			CameraBoom->bDoCollisionTest = false;
@@ -292,6 +300,7 @@ void ARoombaMovement::Tick(float DeltaTime)
 			}
 			
 
+			// interp to spline point
 			FVector SplineLocation = PlayerSplineRef->SplineComponent->FindLocationClosestToWorldLocation(GetActorLocation(),ESplineCoordinateSpace::World);
 			
 			FVector NewLocation =  FMath::VInterpTo(CameraLocation,SplineLocation,DeltaTime,CameraSplineInterSpeed);
@@ -307,13 +316,14 @@ void ARoombaMovement::Tick(float DeltaTime)
 			FollowCamera->SetWorldLocation(NewLocation);		
 		}
 	}
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	ChangePlayerCamera();
 	
     const float FOVInterpSpeed = 0.9; 
     const float FOVTolerance = 0.1f;
 
+	// Interpulate the cameras FOV when dashing
 	if (CameraState == PlayerCameraState::AttachedToPlayer)
 	{
 		if (bIsCurrentlyDashing)
@@ -383,9 +393,9 @@ void ARoombaMovement::HoverPlayer(float DeltaTime)
 
 void ARoombaMovement::ChangePlayerCamera()
  {
-
 	if (CameraState == PlayerCameraState::AttachedToPlayer)
 	{
+		// enable all camera testing and attach it to the player
 		CameraBoom->bInheritYaw = true;
 		CameraBoom->bInheritPitch = true;
 		CameraBoom->bDoCollisionTest = true;
@@ -396,6 +406,7 @@ void ARoombaMovement::ChangePlayerCamera()
 	
 	}
 
+	// interp camera position to the specified position
 	if (CameraState == PlayerCameraState::AtSpecifiedPosition)
 	{
 		GEngine->AddOnScreenDebugMessage(30, 2.0f, FColor::Red, TEXT("Switching Camera!"));

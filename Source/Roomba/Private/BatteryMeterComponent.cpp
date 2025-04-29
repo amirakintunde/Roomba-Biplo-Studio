@@ -37,6 +37,7 @@ void UBatteryMeterComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// get a reff to the light detection bp
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(),LightBPClass,FoundActors);
 
@@ -73,6 +74,7 @@ void UBatteryMeterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	const bool InRegularLight = LightDetectionRef && LightDetectionRef->GetBIsPlayerInLight();
 	const bool InAnyLight =  InArtificialLight || InRegularLight;
 
+	// negation time  based on type of light 
 	if (LightDetectionRef && InArtificialLight)
 	{
 		if (GetWorld()->GetTimerManager().GetTimerRate(StaminaIncreaseHandle) != IncreaseRateInArtificialLight)

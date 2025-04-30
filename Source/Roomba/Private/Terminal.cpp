@@ -44,19 +44,20 @@ void ATerminal::Tick(float DeltaTime)
 		&& GeneratorSwitch3->IsConnectedToRope && GeneratorSwitch4->IsConnectedToRope)
 	{
 	
-		/*if (SwitchActor1->ActorHasTag("Activated") && SwitchActor2->ActorHasTag("Activated")
-			&& SwitchActor3->ActorHasTag("Activated") && SwitchActor4->ActorHasTag("Activated"))*/
-		//{
+		if (SwitchActor1->ActorHasTag("Activated") && SwitchActor2->ActorHasTag("Activated")
+			&& SwitchActor3->ActorHasTag("Activated") && SwitchActor4->ActorHasTag("Activated"))
+		{
 			// All connected to the ropes now check that they have been switched on
 
-		if (!isfading)
-		{
-			isfading = true;
-			APlayerCameraManager * cameramanager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-			cameramanager->StartCameraFade(0, 1, 1.5, FLinearColor::Black, false, true);
+			if (!isfading)
+			{
+				isfading = true;
+				APlayerCameraManager * cameramanager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+				cameramanager->StartCameraFade(0, 1, 1.5, FLinearColor::Black, false, true);
 
-			FTimerHandle FadeTimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &ATerminal::OnFadeComplete, 1.5f, false);
+				FTimerHandle FadeTimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &ATerminal::OnFadeComplete, 1.5f, false);
+			}
 		}
 		
 	//	}
